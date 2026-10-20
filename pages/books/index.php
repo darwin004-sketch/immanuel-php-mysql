@@ -69,15 +69,15 @@ $pageSubtitle = "Kelola data buku, kategori, dan penulis";
                           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
                         </svg></span>
-                      <a href="show.php?id=<?= $book['id'] ?>" style="color:inherit;"><?= $book['title'] ?></a>
+                      <a href="show.php?id=<?= urlencode((string) $book['id']) ?>" style="color:inherit;"><?= htmlspecialchars($book['title'], ENT_QUOTES, 'UTF-8') ?></a>
                     </div>
                   </td>
-                  <td><span class="badge badge-muted"><?= $book['category'] ?></span></td>
+                  <td><span class="badge badge-muted"><?= htmlspecialchars($book['category'] ?? '', ENT_QUOTES, 'UTF-8') ?></span></td>
                   <td>
                     <div class="chip-list">
                       <?php foreach ($book['authors'] as $author): ?>
                         <span class="chip">
-                          <?= $author ?>
+                          <?= htmlspecialchars($author, ENT_QUOTES, 'UTF-8') ?>
                         </span>
                       <?php endforeach ?>
                     </div>
@@ -85,8 +85,8 @@ $pageSubtitle = "Kelola data buku, kategori, dan penulis";
                   <td><?= $book['stock'] ?></td>
                   <td>
                     <div class="cell-actions">
-                      <a href="edit.php?id=<?= $book['id'] ?>" class="btn btn-outline btn-sm">Edit</a>
-                      <a href="../../actions/books/destroy.php?id=<?= $book['id'] ?>" class="btn btn-danger btn-sm"
+                      <a href="edit.php?id=<?= urlencode((string) $book['id']) ?>" class="btn btn-outline btn-sm">Edit</a>
+                      <a href="../../actions/books/destroy.php?id=<?= urlencode((string) $book['id']) ?>" class="btn btn-danger btn-sm"
                         onclick="return confirm('Yakin ingin menghapus buku ini?')">Hapus</a>
                     </div>
                   </td>
