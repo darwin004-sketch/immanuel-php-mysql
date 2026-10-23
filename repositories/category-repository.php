@@ -1,40 +1,44 @@
 <?php
 
+require_once __DIR__ . "/../config/database.php";
+
 function getCategories()
 {
-  $categories = [
-    ["id" => 1, "name" => "Fiksi",     "description" => "Novel dan cerita rekaan",        "total_books" => 3],
-    ["id" => 2, "name" => "Sains",     "description" => "Buku ilmu pengetahuan alam",      "total_books" => 0],
-    ["id" => 3, "name" => "Sejarah",   "description" => "Buku sejarah dan biografi",       "total_books" => 1],
-    ["id" => 4, "name" => "Teknologi", "description" => "Buku pemrograman dan teknologi",  "total_books" => 0],
-  ];
+  global $pdo;
 
-  return $categories;
+  $query = "select c.id, c.name, c.description, count(b.id) as total_books
+            from categories c
+            left join books b on b.category_id = c.id
+            group by c.id, c.name, c.description
+            order by c.id";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute();
+
+  return $stmt->fetchAll();
 }
 
 function isCategoryExists($categoryId)
 {
-    global $pdo;
+  global $pdo;
 
-    $query = "select count(id) from categories where id = :category_id";
+  $query = "select count(id) from categories where id = :category_id";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute(['category_id' => $categoryId]);
 
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([
-        'category_id' => $categoryId
-    ]);
-
-    $isCategoryExists = $stmt->fetchColumn() > 0;
-
-    return $isCategoryExists;
+  return $stmt->fetchColumn() > 0;
 }
 
-function getCategory()
+function getCategory($id = 1)
 {
-  $category = [
-    "id"          => 1,
-    "name"        => "Fiksi",
-    "description" => "Novel dan cerita rekaan",
-  ];
+  global $pdo;
 
-  return $category;
+  $query = "select c.id, c.name, c.description, count(b.id) as total_books
+            from categories c
+            left join books b on b.category_id = c.id
+            where c.id = :id
+            group by c.id, c.name, c.description";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute(['id' => $id]);
+
+  return $stmt->fetch() ?: null;
 }

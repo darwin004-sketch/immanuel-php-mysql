@@ -37,21 +37,16 @@ function getBooks()
 
 function isIsbnTaken($isbn, $ignoreBookId)
 {
-    global $pdo;
+  global $pdo;
 
-    $bookId = intval($ignoreBookId);
+  $query = "select count(id) from books where isbn = :isbn and id != :book_id";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute([
+    'isbn' => $isbn,
+    'book_id' => (int) $ignoreBookId
+  ]);
 
-    $query = "select count(id) from books where isbn = :isbn and id != :book_id";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([
-        'isbn'    => $isbn,
-        'book_id' => $bookId
-    ]);
-
-    $isIsbnTaken = $stmt->fetchColumn() > 0;
-
-    return $isIsbnTaken;
+  return $stmt->fetchColumn() > 0;
 }
 
 function getBook($id)
@@ -64,9 +59,7 @@ function getBook($id)
             left join categories c on b.category_id = c.id
             where b.id = :id";
   $stmt = $pdo->prepare($query);
-  $stmt->execute([
-    'id' => $id
-  ]);
+  $stmt->execute(['id' => $id]);
   $book = $stmt->fetch();
 
   if (!$book) {
@@ -78,9 +71,7 @@ function getBook($id)
             left join authors a on ba.author_id = a.id
             where ba.book_id = :book_id";
   $stmt = $pdo->prepare($query);
-  $stmt->execute([
-    'book_id' => $book['id']
-  ]);
+  $stmt->execute(['book_id' => $book['id']]);
 
   $authors = $stmt->fetchAll();
   $book['author_ids'] = array_column($authors, 'id');

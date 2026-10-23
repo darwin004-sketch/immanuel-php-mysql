@@ -22,6 +22,7 @@ $book = array_merge($book, $old);
 $pageTitle = "Edit Buku";
 $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
 ?>
+<!-- Halaman Buku: tampilan HTML, data dari book-repository, form ke actions/books. -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -38,6 +39,7 @@ $pageSubtitle = "Perbarui data buku, kategori, dan penulis";
     <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
 
       <div class="app-content">
+        <!-- Form POST: data dikirim ke actions, ditangkap via $_POST + isset(). -->
         <form method="POST" action="../../actions/books/update.php">
           <input type="hidden" name="id" value="<?= $book['id'] ?>">
           <div class="form-card" style="margin-bottom:20px;">
