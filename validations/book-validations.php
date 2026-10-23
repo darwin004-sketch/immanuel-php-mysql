@@ -8,13 +8,13 @@ function getBookRequest($request)
     $authorIds = $request['author_ids'] ?? [];
 
     return [
-        'title'       => is_scalar($request['title'] ?? null) ? trim((string) $request['title']) : '',
-        'isbn'        => is_scalar($request['isbn'] ?? null) ? trim((string) $request['isbn']) : '',
-        'year'        => is_scalar($request['year'] ?? null) ? trim((string) $request['year']) : '',
-        'stock'       => is_scalar($request['stock'] ?? null) ? trim((string) $request['stock']) : '',
-        'description' => is_scalar($request['description'] ?? null) ? trim((string) $request['description']) : '',
-        'category_id' => is_scalar($request['category_id'] ?? null) ? trim((string) $request['category_id']) : '',
-        'author_ids'  => is_array($authorIds) ? $authorIds : [],
+        'title'       => htmlspecialchars ($request['title']),
+        'isbn'        => htmlspecialchars ($request['isbn']),
+        'year'        => htmlspecialchars ($request['year']),
+        'stock'       => htmlspecialchars ($request['stock']),
+        'description' => htmlspecialchars ($request['description']),
+        'category_id' => htmlspecialchars ($request['category_id']),
+        'author_ids'  => $request['author_ids'] ?? [],
     ];
 }
 
