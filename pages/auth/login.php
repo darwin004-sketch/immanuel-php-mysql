@@ -1,3 +1,22 @@
+<?php
+require_once __DIR__ . "/../../middleware/auth.php";
+sessionStart();
+requireGuest(); // Hanya guest (belum login) yang dapat mengakses halaman ini
+
+$success = $_SESSION['success'] ?? '';
+$errors = $_SESSION['errors'] ?? '';
+$old =  $_SESSION['old'] ?? '';
+unset($_SESSION['success'], $_SESSION['errors'], $_SESSION['old']);
+
+?>
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
