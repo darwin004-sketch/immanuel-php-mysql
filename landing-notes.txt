@@ -1,1 +1,3 @@
 yang bikin saya bingung di bagian video database connection dan update data dengan kodingan.
+
+Di edit.php, apa fungsi array_merge($book, $old)?
