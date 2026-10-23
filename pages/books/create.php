@@ -15,6 +15,7 @@ $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
 ?>
 
 <!DOCTYPE html>
+<!-- Halaman Buku: tampilan HTML, data dari book-repository, form ke actions/books. -->
 <html lang="id">
 
 <head>
@@ -32,6 +33,7 @@ $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
       <?php require_once __DIR__ . "/../../components/admin/topbar.php" ?>
 
       <div class="app-content">
+        <!-- Form POST: data dikirim ke actions, ditangkap via $_POST + isset(). -->
         <form method="POST" action="../../actions/books/store.php">
           <div class="form-card" style="margin-bottom:20px;">
             <div class="form-section-title">Data Buku</div>
