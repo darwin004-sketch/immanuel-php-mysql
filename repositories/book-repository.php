@@ -2,18 +2,27 @@
 
 require_once __DIR__ . "/../config/database.php";
 
-function getBooks()
+function getBooks($search, $catergoryId, $currentPage, $perPage)
 {
   global $pdo;
 
   $query = "select b.id, b.title, b.stock, c.name as category, a.name as author
             from books b
             left join categories c on b.category_id = c.id
-            left join book_author ba on b.id = ba.book_id
-            left join authors a on ba.author_id = a.id
-            order by b.id";
+            where b.title like :search
+            and (:category_filter = '' or b.category_id = :category_id)
+            limit offset :offset
+            ";
+            
   $stmt = $pdo->prepare($query);
   $stmt->execute();
+  'search' => "%$search",
+  'category_filter' => $catergoryId,
+  'category_id' => $catergoryId,
+  'limit' => $perPage
+  'offset' => ($currentPage - 1) * $perPage
+  ]);
+
 
   $books = [];
   foreach ($stmt->fetchAll() as $row) {
@@ -39,43 +48,41 @@ function isIsbnTaken($isbn, $ignoreBookId)
 {
   global $pdo;
 
+  $bookId = intval ($ignoreBookId)
+
   $query = "select count(id) from books where isbn = :isbn and id != :book_id";
+  
   $stmt = $pdo->prepare($query);
   $stmt->execute([
     'isbn' => $isbn,
-    'book_id' => (int) $ignoreBookId
+    'book_id' => $bookId
   ]);
 
-  return $stmt->fetchColumn() > 0;
+ $isIsbnTaken = $stmt->fetchColumn() > 0;
+ 
+return $isIsbnTaken;
 }
 
-function getBook($id)
+
+
+function countOfBooks($search, $categoryId)
 {
-  global $pdo;
+    global $pdo;
 
-  $query = "select b.id, b.title, b.isbn, b.year, b.stock, b.category_id,
-                   b.description, c.name as category
-            from books b
-            left join categories c on b.category_id = c.id
-            where b.id = :id";
-  $stmt = $pdo->prepare($query);
-  $stmt->execute(['id' => $id]);
-  $book = $stmt->fetch();
+$query = select count(id) from books
+         where title like: title and 
+         (:category_filter = '' or category_id = :category_id)
+         ";
+ 
+$stmt = $pdo->prepare($query);      
+ $stmt->execute([
+ 'title' => "%$search",
+    'category_filter' => $categoryId,
+    'category_id' => $categoryId,
+    ]);
 
-  if (!$book) {
-    return null;
-  }
+    $totalBooks = $stmt->fetchColumn();
 
-  $query = "select a.id, a.name
-            from book_author ba
-            left join authors a on ba.author_id = a.id
-            where ba.book_id = :book_id";
-  $stmt = $pdo->prepare($query);
-  $stmt->execute(['book_id' => $book['id']]);
+    return $totalBooks;
 
-  $authors = $stmt->fetchAll();
-  $book['author_ids'] = array_column($authors, 'id');
-  $book['authors'] = array_column($authors, 'name');
-
-  return $book;
-}
+ }   

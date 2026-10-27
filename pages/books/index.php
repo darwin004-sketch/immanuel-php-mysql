@@ -1,9 +1,27 @@
 <?php
-require_once __DIR__ . "/../../repositories/book-repository.php";
 require_once __DIR__ . "/../../middleware/auth.php";
-requireRole(['admin', 'member']); // Hanya admin dan pustakawan yang dapat mengakses halaman ini
+requireAuth();
+require_once __DIR__ . "/../../repositories/book-repository.php";
+require_once __DIR__ . "/../../repositories/category-repository.php";
 
-$books = getBooks();
+$perPage = 2;
+$currentPage = max(1, (int) $_GET['page'] ?? 1);
+
+
+$search = trim($_GET['search'] ?? "");
+$catergoryId = trim($_GET['category_id'] ?? "");
+if(! ctype_digit($catergoryId)) {
+  $catergoryId = "";
+}
+
+$categories = getCategories();
+$books = getBooks($search, $catergoryId, $currentPage, $perPage);
+
+$totalBooks = countOfBooks($search, $categoryId);
+$totalPages = ceil($totalBooks / $perPage);
+
+
+
 
 $pageTitle = "Manajemen Buku";
 $pageSubtitle = "Kelola data buku, kategori, dan penulis";
@@ -40,6 +58,12 @@ $pageSubtitle = "Kelola data buku, kategori, dan penulis";
             </div>
             <select name="category" class="filter-select">
               <option value="">Semua Kategori</option>
+              <?php foreach ($categories as $category): ?>
+                <option <?= $catergoryId = $category['id'] ? 'selected' : '' ?> value="<?=$category['id'] ?>">
+                <?= $catergory['name'] ?>
+              </option>
+              <?php endforeach; ?>
+              </select>
               <option value="Fiksi">Fiksi</option>
               <option value="Sains">Sains</option>
               <option value="Sejarah">Sejarah</option>
@@ -99,9 +123,18 @@ $pageSubtitle = "Kelola data buku, kategori, dan penulis";
         </div>
 
         <div class="pagination">
-          <span class="pagination-btn is-disabled">&lt;</span>
-          <span class="pagination-btn is-disabled">&gt;</span>
-        </div>
+          <?php if($currentPage):?>
+            <a
+            href =?<?= http_build_query(['search' => $search, 'category_id => $categroy_id, 'page' => $currentPage])
+            <span class="pagination-btn">&gt;</span>
+           </a>
+             <?php else: ?>
+              <span class= "pagination-btn is-disabeld"> &lt;</span>
+             <?php endif;>
+         
+             <?php if($currentPage < 3 ):?>
+              <?php endif;>
+              
       </div>
     </main>
   </div>
