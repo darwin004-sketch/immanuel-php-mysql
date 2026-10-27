@@ -1,15 +1,8 @@
-<?php
-require_once __DIR__ . "/../../middleware/auth.php";
-sessionStart();
-requireGuest(); // Hanya guest (belum login) yang dapat mengakses halaman ini
+<?php 
+session_start();
 
 $success = $_SESSION['success'] ?? '';
-$errors = $_SESSION['errors'] ?? '';
-$old =  $_SESSION['old'] ?? '';
-unset($_SESSION['success'], $_SESSION['errors'], $_SESSION['old']);
-
-?>
-
+unset($_SESSION['success']);
 
 
 
@@ -35,17 +28,37 @@ unset($_SESSION['success'], $_SESSION['errors'], $_SESSION['old']);
       </div>
       <h1>Selamat Datang Kembali</h1>
       <p class="auth-subtitle">Masuk untuk mengelola koleksi buku perpustakaan.</p>
+    
+       <?php if ():?>
+       <p style="color: green; font-size: 12px; margin-bottom: 12px;"
+         <?= $success ?>
+       </p>
+       
+       <?php endif?>
 
-      <form method="" action="">
-        <div class="form-group">
+
+      <form method="" action="../../actions/auth/login.php">
+        <p class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="nama@sekolah.sch.id">
+          <?php if (isset($errors['password_confirmation'])): ?>
+                <p style="font-size:12px; margin-top: 4px; color: red;"><?= 
+          </p>
+          <?php endif ?>
         </div>
         <div class="form-group">
           <label for="password">Kata Sandi</label>
           <input type="password" id="password" name="password" placeholder="Masukkan kata sandi">
+          placehorder="Ulangi kata sandi">
+          
+          <?php if(isset($errors['email'])): ?>
+             <p style="font-size:12px; margin-top: 4px; color: red;">
+             <?= $errors['emails'] ?>
+           </p>
+           <?php endif ?>  
+
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+        <button name="login" type="submit" class="btn btn-primary btn-block">Masuk</button>
       </form>
 
       <p class="form-footer-link">

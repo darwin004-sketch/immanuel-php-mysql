@@ -87,7 +87,7 @@ $pageSubtitle = "Lengkapi data buku, kategori, dan penulis";
               <textarea id="description" name="description" rows="3" placeholder="Sinopsis singkat buku"><?= htmlspecialchars($old['description'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
               <?php if (isset($errors['description'])): ?>
                 <p style="font-size:12px; margin-top: 4px; color: red;"><?= htmlspecialchars($errors['description'], ENT_QUOTES, 'UTF-8') ?></p>
-              <?php endif; ?>
+              <?php endif ?>
             </div>
           </div>
 
